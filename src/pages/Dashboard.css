@@ -1,18 +1,12 @@
-.dashboard {
-      padding: 20px;
-      background-color: #f0f0f0; /* Or any light background color you prefer */
-    }
+/* ... other styles ... */
 
     .chart-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+      grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+      grid-template-rows: repeat(2, 1fr); /* Two equal rows */
       grid-gap: 20px;
     }
 
     .chart-container {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      /* No fixed height - let the chart content determine height */
+      /* ... other styles ... */
     }
