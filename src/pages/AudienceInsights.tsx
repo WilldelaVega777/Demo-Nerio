@@ -1,12 +1,24 @@
 import React from 'react';
-    import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line, Legend } from 'recharts';
+    import {
+      PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line, Legend, ComposedChart,
+    } from 'recharts';
     import { demographics } from '../data/demographics';
     import { listeningBehavior } from '../data/listeningBehavior';
     import { engagement } from '../data/engagement';
     import './AudienceInsights.css';
 
     const AudienceInsights: React.FC = () => {
-      const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+      const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF8042', '#8884d8'];
+
+      const data = [
+        { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
+        { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
+        { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
+        { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
+        { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
+        { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
+        { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
+      ];
 
       return (
         <div className="audience-insights">
@@ -129,14 +141,15 @@ import React from 'react';
               <div className="chart-item">
                 <h3>Social Media Engagement</h3>
                 <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={Object.entries(engagement.socialMedia).map(([key, value]) => ({ name: key, value }))}>
-                    <CartesianGrid strokeDasharray="3 3" />
+                  <ComposedChart data={Object.entries(engagement.socialMedia).map(([key, value]) => ({ name: key, ...value }))}>
+                    <CartesianGrid stroke="#f5f5f5" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="mentions" fill="#8884d8" />
-                    <Bar dataKey="sentiment" fill="#82ca9d" />
-                  </BarChart>
+                    <Legend />
+                    <Bar dataKey="mentions" barSize={20} fill="#413ea0" />
+                    <Line type="monotone" dataKey="sentiment" stroke="#ff7300" />
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
               <div className="chart-item">

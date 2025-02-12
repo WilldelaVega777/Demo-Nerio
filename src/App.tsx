@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
     import Dashboard from './pages/Dashboard';
     import PodcastOverview from './pages/PodcastOverview';
     import SentimentAnalysis from './pages/SentimentAnalysis';
-    import AudienceInsights from './pages/AudienceInsights'; // Import AudienceInsights
+    import AudienceInsights from './pages/AudienceInsights';
 
     function App() {
       return (
