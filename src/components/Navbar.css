@@ -1,0 +1,29 @@
+nav {
+      background-color: #343a40; /* Dark background for visibility */
+      padding: 10px 20px; /* Add padding */
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav li {
+      margin-right: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white; /* White text on dark background */
+      padding: 8px 12px; /* Add padding to links */
+      border-radius: 5px; /* Rounded corners for links */
+      transition: background-color 0.3s ease; /* Smooth transition */
+    }
+
+    nav .active a,
+    nav a:hover {
+      background-color: #28a745; /* Highlight active/hovered links */
+      color: white;
+    }

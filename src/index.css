@@ -1,0 +1,19 @@
+body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif; /* Restore the original font stack */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: 0 !important;
+    }
+
+    /* Target specific Recharts elements for resets */
+    .recharts-surface, /* Only reset fill for the chart surface */
+    .recharts-bar-rectangle, /* And for bar rectangles if needed */
+    .recharts-area, /* And for area charts */
+    .recharts-pie { /* And for pie charts */
+      fill: inherit !important;
+    }
+
+    /* Remove other global Recharts resets to avoid font issues */

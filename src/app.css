@@ -1,0 +1,14 @@
+.app-container {
+      display: flex;
+      flex-direction: column; /* Stack navbar and content vertically */
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .content-container { /* Styles for the content area */
+      flex-grow: 1; /* Allow content to fill available space */
+      padding: 20px; /* Add padding around content */
+      background-color: #f8f9fa; /* Light background for content */
+      /* ... other content styles ... */
+    }
