@@ -10,25 +10,15 @@ import React from 'react';
     const AudienceInsights: React.FC = () => {
       const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF8042', '#8884d8'];
 
-      const data = [
-        { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-        { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-        { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-        { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-        { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-        { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-        { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
-      ];
-
       return (
         <div className="audience-insights">
-          <h1>Audience Insights</h1>
+          <h1>Información de la Audiencia</h1>
 
           <div className="section">
-            <h2>Demographic Breakdown</h2>
+            <h2>Desglose Demográfico</h2>
             <div className="chart-grid">
               <div className="chart-item">
-                <h3>Age Distribution</h3>
+                <h3>Distribución por Edad</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie
@@ -49,7 +39,7 @@ import React from 'react';
                 </ResponsiveContainer>
               </div>
               <div className="chart-item">
-                <h3>Gender Distribution</h3>
+                <h3>Distribución por Género</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie
@@ -70,7 +60,7 @@ import React from 'react';
                 </ResponsiveContainer>
               </div>
               <div className="chart-item">
-                <h3>Location Distribution</h3>
+                <h3>Distribución por Ubicación</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <BarChart data={Object.entries(demographics.location).map(([key, value]) => ({ name: key, value }))}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -85,10 +75,10 @@ import React from 'react';
           </div>
 
           <div className="section">
-            <h2>Listening Behavior</h2>
+            <h2>Comportamiento de Escucha</h2>
             <div className="chart-grid">
               <div className="chart-item">
-                <h3>Listening Times</h3>
+                <h3>Horarios de Escucha</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <BarChart data={Object.entries(listeningBehavior.listeningTimes).map(([key, value]) => ({ name: key, value }))}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -100,7 +90,7 @@ import React from 'react';
                 </ResponsiveContainer>
               </div>
               <div className="chart-item">
-                <h3>Device Usage</h3>
+                <h3>Uso de Dispositivos</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie
@@ -121,7 +111,7 @@ import React from 'react';
                 </ResponsiveContainer>
               </div>
               <div className="chart-item">
-                <h3>Platform Usage</h3>
+                <h3>Uso de Plataformas</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <BarChart data={Object.entries(listeningBehavior.platforms).map(([key, value]) => ({ name: key, value }))}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -136,10 +126,10 @@ import React from 'react';
           </div>
 
           <div className="section">
-            <h2>Engagement Analysis</h2>
+            <h2>Análisis de Interacción</h2>
             <div className="chart-grid">
               <div className="chart-item">
-                <h3>Social Media Engagement</h3>
+                <h3>Interacción en Redes Sociales</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <ComposedChart data={Object.entries(engagement.socialMedia).map(([key, value]) => ({ name: key, ...value }))}>
                     <CartesianGrid stroke="#f5f5f5" />
@@ -153,7 +143,7 @@ import React from 'react';
                 </ResponsiveContainer>
               </div>
               <div className="chart-item">
-                <h3>Website Traffic</h3>
+                <h3>Tráfico del Sitio Web</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <LineChart data={Object.entries(engagement.website.pageViews).map(([key, value]) => ({ name: key, value }))}>
                     <CartesianGrid strokeDasharray="3 3" />

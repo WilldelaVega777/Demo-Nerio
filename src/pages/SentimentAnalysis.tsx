@@ -7,20 +7,20 @@ import React from 'react';
     import './SentimentAnalysis.css';
 
     const SentimentAnalysis: React.FC = () => {
-      const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+      const COLORS = ['#00C49F', '#FF8042', '#FFBB28'];
 
       return (
         <div className="sentiment-analysis">
-          <h1>Sentiment Analysis</h1>
+          <h1>Análisis de Sentimiento</h1>
 
           <div className="section">
-            <h2>Overall Sentiment</h2>
+            <h2>Sentimiento General</h2>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart width={300} height={200}>
                 <Pie
                   data={[
-                    { name: 'Positive', value: overallSentiment.positive },
-                    { name: 'Negative', value: overallSentiment.negative },
+                    { name: 'Positivo', value: overallSentiment.positive },
+                    { name: 'Negativo', value: overallSentiment.negative },
                     { name: 'Neutral', value: overallSentiment.neutral },
                   ]}
                   cx="50%"
@@ -30,7 +30,7 @@ import React from 'react';
                   dataKey="value"
                   label
                 >
-                  {['#00C49F', '#FF8042', '#FFBB28'].map((entry, index) => (
+                  {COLORS.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry} />
                   ))}
                 </Pie>
@@ -41,7 +41,7 @@ import React from 'react';
           </div>
 
           <div className="section">
-            <h2>Sentiment Over Time</h2>
+            <h2>Sentimiento a lo largo del tiempo</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={sentimentOverTime}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -56,7 +56,7 @@ import React from 'react';
           </div>
 
           <div className="section">
-            <h2>Sentiment by Episode</h2>
+            <h2>Sentimiento por Episodio</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={sentimentByEpisode}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -71,12 +71,12 @@ import React from 'react';
           </div>
 
           <div className="section">
-            <h2>Detailed Breakdown</h2>
+            <h2>Desglose detallado</h2>
             <table>
               <thead>
                 <tr>
-                  <th>Comment</th>
-                  <th>Sentiment</th>
+                  <th>Comentario</th>
+                  <th>Sentimiento</th>
                 </tr>
               </thead>
               <tbody>
