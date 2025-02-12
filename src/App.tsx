@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
     import Dashboard from './pages/Dashboard';
     import PodcastOverview from './pages/PodcastOverview';
     import SentimentAnalysis from './pages/SentimentAnalysis';
-    // ... other imports
+    import AudienceInsights from './pages/AudienceInsights'; // Import AudienceInsights
 
     function App() {
       return (
@@ -14,8 +14,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/overview" element={<PodcastOverview />} />
-                <Route path="/sentiment" element={<SentimentAnalysis />} /> {/* Check this route */}
-                {/* ... other routes ... */}
+                <Route path="/sentiment" element={<SentimentAnalysis />} />
+                <Route path="/audience" element={<AudienceInsights />} /> {/* Add this route */}
               </Routes>
             </div>
           </div>
