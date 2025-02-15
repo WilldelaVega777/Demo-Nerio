@@ -43,4 +43,3 @@ export const episodeData = {
         hashtags: ["#IA", "#podcast", "#futuro"], // Translated
     },
 };
-
