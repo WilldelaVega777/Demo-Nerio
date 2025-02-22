@@ -1,20 +1,20 @@
-nav {
+.top-nav {
       background-color: #343a40; /* Dark background for visibility */
-      padding: 10px 20px; /* Add padding */
+      padding: 10px 140px; /* Add padding */
     }
 
-    nav ul {
+    .top-nav ul {
       list-style: none;
       margin: 0;
       padding: 0;
       display: flex;
     }
 
-    nav li {
+    .top-nav li {
       margin-right: 20px;
     }
 
-    nav a {
+    .top-nav a {
       text-decoration: none;
       color: white; /* White text on dark background */
       padding: 8px 12px; /* Add padding to links */
@@ -22,8 +22,8 @@ nav {
       transition: background-color 0.3s ease; /* Smooth transition */
     }
 
-    nav .active a,
-    nav a:hover {
+    .top-nav .active a,
+    .top-nav a:hover {
       background-color: #28a745; /* Highlight active/hovered links */
       color: white;
     }
