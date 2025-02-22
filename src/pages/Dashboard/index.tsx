@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // Imports Section
 //--------------------------------------------------------------------------------------
-import React from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, AreaChart, 
   Area, PieChart, Pie, Cell, ResponsiveContainer, ComposedChart
@@ -14,6 +14,7 @@ import { socialMediaEngagement } from '../../data/socialMediaEngagement';
 import { sentimentAnalysis } from '../../data/sentimentAnalysis';
 import './Dashboard.css';
 import { strings } from '../../providers/strings';
+import ChartContainer from '../../components/ChartContainer';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
@@ -32,6 +33,48 @@ const Dashboard: React.FC<DashboardProps> = ({ /* props */ }) => {
   const handleSpeakerClick = (chartTitle: string) => {
     // Placeholder function for speaker button action
     alert(`Speaker button clicked for ${chartTitle}`);
+  };
+
+  //--------------------------------------------------------------------------------------
+  // JSX Section
+  //--------------------------------------------------------------------------------------
+  const Dashboard: FC = () => {
+    const [isLoading, setIsLoading] = useState(true);
+  
+    useEffect(() => {
+      // Simulate data loading
+      const loadData = async () => {
+        setIsLoading(true);
+        try {
+          // Your data fetching logic here
+          await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadData();
+    }, []);
+  
+    return (
+      <div className="dashboard">
+        <div className="chart-grid">
+          <ChartContainer 
+            title={strings.dashboard.playsPerEpisode}
+            isLoading={isLoading}
+            onSpeakerClick={handleSpeakerClick}
+          >
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={playsPerEpisode}>
+                {/* ... chart content ... */}
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+          
+          {/* Repeat for other charts */}
+        </div>
+      </div>
+    );
   };
 
   //--------------------------------------------------------------------------------------
