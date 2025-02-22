@@ -80,6 +80,8 @@ const Dashboard: React.FC<DashboardProps> = ({ /* props */ }) => {
   //--------------------------------------------------------------------------------------
   // JSX Section
   //--------------------------------------------------------------------------------------
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; // Colores para el gráfico circular
+  
   return (
     <div className="dashboard">
       <div className="chart-grid">
@@ -135,7 +137,7 @@ const Dashboard: React.FC<DashboardProps> = ({ /* props */ }) => {
                 label
               >
                 {audienceDemographics.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={`#${(index * 100000 + 500000).toString(16).slice(0, 6)}`} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
