@@ -1,16 +1,18 @@
 //--------------------------------------------------------------------------------------
 // Imports Section
 //--------------------------------------------------------------------------------------
+/// <reference types="vite/client" />
 import { createContext, useContext, useState, ReactNode, FC } from 'react';
-import users from '../data/users.json';
+import axios from 'axios';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
 //--------------------------------------------------------------------------------------
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  signup: (data: { email: string; password: string; licenseKey: string }) => Promise<boolean>;
 }
 
 interface AuthProviderProps {
@@ -21,6 +23,7 @@ interface AuthProviderProps {
 // Variables Section
 //--------------------------------------------------------------------------------------
 const AuthContext = createContext<AuthContextType | null>(null);
+const API_URL = import.meta.env.VITE_API_URL;
 
 //--------------------------------------------------------------------------------------
 // Page Main Function Section
@@ -29,24 +32,52 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   //--------------------------------------------------------------------------------------
   // Hooks Section
   //--------------------------------------------------------------------------------------
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!localStorage.getItem('token');
+  });
 
   //--------------------------------------------------------------------------------------
   // Functions Section
   //--------------------------------------------------------------------------------------
-  const login = (username: string, password: string) => {
-    const user = users.users.find(
-      (u) => u.username === username && u.password === password,
-    );
+  const login = async (username: string, password: string) => {
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        email: username,
+        password,
+      });
 
-    if (user) {
-      setIsAuthenticated(true);
-      return true;
+      if (response.data.access_token) {
+        localStorage.setItem('token', response.data.access_token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     }
-    return false;
+  };
+
+  const signup = async (data: { email: string; password: string; licenseKey: string }) => {
+    try {
+      const response = await axios.post(`${API_URL}/auth/signup`, data);
+      
+      if (response.data.access_token) {
+        localStorage.setItem('token', response.data.access_token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
   };
 
@@ -54,7 +85,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   // JSX Section
   //--------------------------------------------------------------------------------------
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,47 +1,27 @@
 //--------------------------------------------------------------------------------------
 // Imports Section
 //--------------------------------------------------------------------------------------
-import { FC, useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
-import { useAuth } from '../../providers/AuthProvider';
-import './Login.css';
+import React from 'react';
+import './Settings.css';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
 //--------------------------------------------------------------------------------------
-interface LoginProps {
+interface SettingsProps {
   // Define props here (if any)
 }
 
 //--------------------------------------------------------------------------------------
 // Page Main Function Section
 //--------------------------------------------------------------------------------------
-const Login: FC<LoginProps> = ({ /* props */ }) => {
-  //--------------------------------------------------------------------------------------
-  // Hooks Section
-  //--------------------------------------------------------------------------------------
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const { isAuthenticated, login } = useAuth();
-
+const Settings: React.FC<SettingsProps> = ({ /* props */ }) => {
   //--------------------------------------------------------------------------------------
   // Functions Section
   //--------------------------------------------------------------------------------------
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const success = await login(username, password);
-      if (success) {
-        setError('');
-      } else {
-        setError('Invalid username or password');
-      }
-    } catch (error) {
-      setError('An error occurred during login');
-      console.error('Login error:', error);
-    }
-  };
+
+  //--------------------------------------------------------------------------------------
+  // Hooks Section
+  //--------------------------------------------------------------------------------------
 
   //--------------------------------------------------------------------------------------
   // Variables Section
@@ -58,39 +38,40 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
   //--------------------------------------------------------------------------------------
   // JSX Section
   //--------------------------------------------------------------------------------------
-  if (isAuthenticated) {
-    return <Navigate to="/" />;
-  }
-
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Login</h2>
-        {error && <div className="error-message">{error}</div>}
-        <div className="form-group">
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-        <div className="auth-links">
-          <Link to="/forgot-password">Forgot Password?</Link>
-          <Link to="/signup">Don't have an account? Sign up</Link>
-        </div>
-      </form>
+    <div className="settings">
+      <h1>Configuración</h1>
+      <div className="settings-container">
+        <section className="settings-section">
+          <h2>Configuración de Canal de YouTube</h2>
+          <div className="form-group">
+            <label>ID del Canal</label>
+            <input type="text" placeholder="Ingrese el ID del canal" />
+          </div>
+          <div className="form-group">
+            <label>Nombre del Canal</label>
+            <input type="text" placeholder="Ingrese el nombre del canal" />
+          </div>
+          <button className="save-button">Guardar Configuración</button>
+        </section>
+
+        <section className="settings-section">
+          <h2>Configuración de Extracción de Datos</h2>
+          <div className="form-group">
+            <label>Frecuencia de Actualización</label>
+            <select>
+              <option value="daily">Diario</option>
+              <option value="weekly">Semanal</option>
+              <option value="monthly">Mensual</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Cantidad de Videos a Analizar</label>
+            <input type="number" min="1" max="100" placeholder="Ingrese cantidad" />
+          </div>
+          <button className="save-button">Guardar Configuración</button>
+        </section>
+      </div>
     </div>
   );
 };
@@ -98,4 +79,4 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
 //--------------------------------------------------------------------------------------
 // Exports Section
 //--------------------------------------------------------------------------------------
-export default Login;
+export default Settings;

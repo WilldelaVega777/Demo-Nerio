@@ -7,7 +7,8 @@ import {
   ChatBubbleBottomCenterTextIcon,
   UserGroupIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import './Sidebar.css';
 
@@ -31,6 +32,7 @@ const Sidebar: FC<SidebarProps> = () => {
       <button 
         className="collapse-btn"
         title={isCollapsed ? 'Expandir menú' : 'Colapsar menú'}
+        onClick={() => setIsCollapsed(!isCollapsed)}
       >
         {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
       </button>
@@ -46,6 +48,15 @@ const Sidebar: FC<SidebarProps> = () => {
             {!isCollapsed && <span>{item.text}</span>}
           </Link>
         ))}
+        <div className="sidebar-spacer" />
+        <Link
+          to="/settings"
+          className={`sidebar-link ${location.pathname === '/settings' ? 'active' : ''}`}
+          title="Configuración"
+        >
+          <Cog6ToothIcon className="sidebar-icon" />
+          {!isCollapsed && <span>Configuración</span>}
+        </Link>
       </nav>
     </div>
   );

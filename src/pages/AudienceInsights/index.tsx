@@ -9,6 +9,7 @@ import {
 import { demographics } from '../../data/demographics';
 import { listeningBehavior } from '../../data/listeningBehavior';
 import { engagement } from '../../data/engagement';
+import { aggregateSocialMetrics } from '../../utils/dataAggregation';
 import './AudienceInsights.css';
 
 //--------------------------------------------------------------------------------------
@@ -28,9 +29,24 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF8042', '#8884d8'];
 
   const handleSpeakerClick = (chartTitle: string) => {
-    // Placeholder function for speaker button action
     alert(`Speaker button clicked for ${chartTitle}`);
   };
+
+  // Process data using aggregation utilities
+  const demographicsData = {
+    age: Object.entries(demographics.age).map(([key, value]) => ({ name: key, value })),
+    gender: Object.entries(demographics.gender).map(([key, value]) => ({ name: key, value })),
+    location: Object.entries(demographics.location).map(([key, value]) => ({ name: key, value }))
+  };
+
+  const listeningData = {
+    times: Object.entries(listeningBehavior.listeningTimes).map(([key, value]) => ({ name: key, value })),
+    devices: Object.entries(listeningBehavior.devices).map(([key, value]) => ({ name: key, value })),
+    platforms: Object.entries(listeningBehavior.platforms).map(([key, value]) => ({ name: key, value }))
+  };
+
+  const socialMetrics = aggregateSocialMetrics(engagement.socialMedia);
+  const websiteTraffic = Object.entries(engagement.website.pageViews).map(([key, value]) => ({ name: key, value }));
 
   //--------------------------------------------------------------------------------------
   // JSX Section
@@ -48,7 +64,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
                   <Pie
-                    data={Object.entries(demographics.age).map(([key, value]) => ({ name: key, value }))}
+                    data={demographicsData.age}
                     dataKey="value"
                     cx="50%"
                     cy="50%"
@@ -74,7 +90,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
                   <Pie
-                    data={Object.entries(demographics.gender).map(([key, value]) => ({ name: key, value }))}
+                    data={demographicsData.gender}
                     dataKey="value"
                     cx="50%"
                     cy="50%"
@@ -98,7 +114,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
             <h3>Distribución por Ubicación</h3>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={Object.entries(demographics.location).map(([key, value]) => ({ name: key, value }))}>
+                <BarChart data={demographicsData.location}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -121,7 +137,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
             <h3>Horarios de Escucha</h3>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={Object.entries(listeningBehavior.listeningTimes).map(([key, value]) => ({ name: key, value }))}>
+                <BarChart data={listeningData.times}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -140,7 +156,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
                   <Pie
-                    data={Object.entries(listeningBehavior.devices).map(([key, value]) => ({ name: key, value }))}
+                    data={listeningData.devices}
                     dataKey="value"
                     cx="50%"
                     cy="50%"
@@ -164,7 +180,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
             <h3>Uso de Plataformas</h3>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={Object.entries(listeningBehavior.platforms).map(([key, value]) => ({ name: key, value }))}>
+                <BarChart data={listeningData.platforms}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -187,7 +203,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
             <h3>Interacción en Redes Sociales</h3>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={200}>
-                <ComposedChart data={Object.entries(engagement.socialMedia).map(([key, value]) => ({ name: key,...value }))}>
+                <ComposedChart data={[socialMetrics]}>
                   <CartesianGrid stroke="#f5f5f5" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -206,7 +222,7 @@ const AudienceInsights: React.FC<AudienceInsightsProps> = ({ /* props */ }) => {
             <h3>Tráfico del Sitio Web</h3>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={Object.entries(engagement.website.pageViews).map(([key, value]) => ({ name: key, value }))}>
+                <LineChart data={websiteTraffic}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />

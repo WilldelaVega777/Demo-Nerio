@@ -4,56 +4,49 @@
 import { FC, useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
-import './Login.css';
+import '../Login/Login.css';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
 //--------------------------------------------------------------------------------------
-interface LoginProps {
+interface SignupProps {
   // Define props here (if any)
 }
 
 //--------------------------------------------------------------------------------------
 // Page Main Function Section
 //--------------------------------------------------------------------------------------
-const Login: FC<LoginProps> = ({ /* props */ }) => {
+const Signup: FC<SignupProps> = ({ /* props */ }) => {
   //--------------------------------------------------------------------------------------
   // Hooks Section
   //--------------------------------------------------------------------------------------
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, signup } = useAuth();
 
   //--------------------------------------------------------------------------------------
   // Functions Section
   //--------------------------------------------------------------------------------------
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const success = await login(username, password);
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    signup({
+      email: username,
+      password: password,
+      licenseKey: '' // Since we're not collecting licenseKey in this form
+    }).then(success => {
       if (success) {
         setError('');
       } else {
-        setError('Invalid username or password');
+        setError('Error creating account');
       }
-    } catch (error) {
-      setError('An error occurred during login');
-      console.error('Login error:', error);
-    }
+    });
   };
-
-  //--------------------------------------------------------------------------------------
-  // Variables Section
-  //--------------------------------------------------------------------------------------
-
-  //--------------------------------------------------------------------------------------
-  // Events Section
-  //--------------------------------------------------------------------------------------
-
-  //--------------------------------------------------------------------------------------
-  // UseEffects Section
-  //--------------------------------------------------------------------------------------
 
   //--------------------------------------------------------------------------------------
   // JSX Section
@@ -65,7 +58,7 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <h2>Login</h2>
+        <h2>Sign Up</h2>
         {error && <div className="error-message">{error}</div>}
         <div className="form-group">
           <input
@@ -85,11 +78,19 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
             required
           />
         </div>
-        <button type="submit">Login</button>
-        <div className="auth-links">
-          <Link to="/forgot-password">Forgot Password?</Link>
-          <Link to="/signup">Don't have an account? Sign up</Link>
+        <div className="form-group">
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
+            required
+          />
         </div>
+        <button type="submit">Sign Up</button>
+        <p className="auth-link">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </form>
     </div>
   );
@@ -98,4 +99,4 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
 //--------------------------------------------------------------------------------------
 // Exports Section
 //--------------------------------------------------------------------------------------
-export default Login;
+export default Signup;
