@@ -88,9 +88,9 @@ const Signup: FC<SignupProps> = ({ /* props */ }) => {
           />
         </div>
         <button type="submit">Sign Up</button>
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
+        <div className="auth-links">
+          <Link to="/login">Already have an account? Sign in</Link>
+        </div>
       </form>
     </div>
   );

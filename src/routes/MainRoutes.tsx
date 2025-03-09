@@ -13,6 +13,8 @@ import Signup from '../pages/Signup';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import { useAuth } from '../providers/AuthProvider';
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
@@ -49,6 +51,8 @@ const MainRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <div className="app-container">
+              <Sidebar />
+              <Navbar />
               <div className="content-container">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />

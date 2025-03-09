@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Alert, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../providers/AuthProvider';
 import { validateLicenseKey } from '../../services/licenseService';
 import axios from 'axios';
@@ -15,6 +16,8 @@ interface SignupFormData {
 export const SignupPage: React.FC = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState<SignupFormData>({
     email: '',
     password: '',
@@ -112,8 +115,21 @@ export const SignupPage: React.FC = () => {
             fullWidth
             name="password"
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
             value={formData.password}
             onChange={handleChange}
           />
@@ -123,8 +139,21 @@ export const SignupPage: React.FC = () => {
             fullWidth
             name="confirmPassword"
             label="Confirm Password"
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             id="confirmPassword"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle confirm password visibility"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
             value={formData.confirmPassword}
             onChange={handleChange}
           />
