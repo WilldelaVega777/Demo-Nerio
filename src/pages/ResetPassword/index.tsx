@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
+import { Form, Input, Button, Typography, Alert, Card } from 'antd';
 
 export const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -63,74 +63,77 @@ export const ResetPassword: React.FC = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+    <Card style={{ maxWidth: 400, margin: '40px auto', padding: '24px' }}>
+      <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
+        Reset Password
+      </Typography.Title>
+
+      {error && (
+        <Alert
+          message={error}
+          type="error"
+          showIcon
+          style={{ marginBottom: '24px' }}
+        />
+      )}
+
+      {success && (
+        <Alert
+          message={success}
+          type="success"
+          showIcon
+          style={{ marginBottom: '24px' }}
+        />
+      )}
+
+      <Form
+        onFinish={handleSubmit}
+        layout="vertical"
+        requiredMark="optional"
       >
-        <Typography component="h1" variant="h5">
-          Reset Password
-        </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        {success && (
-          <Alert severity="success" sx={{ width: '100%', mt: 2 }}>
-            {success}
-          </Alert>
-        )}
-
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+        <Form.Item
+          label="New Password"
+          name="password"
+          rules={[{ required: true, message: 'Please input your new password!' }]}
+        >
+          <Input.Password
             name="password"
-            label="New Password"
-            type="password"
-            id="password"
             value={formData.password}
             onChange={handleChange}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+        </Form.Item>
+        <Form.Item
+          label="Confirm New Password"
+          name="confirmPassword"
+          rules={[{ required: true, message: 'Please confirm your new password!' }]}
+        >
+          <Input.Password
             name="confirmPassword"
-            label="Confirm New Password"
-            type="password"
-            id="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
           />
+        </Form.Item>
+        <Form.Item>
           <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading}
+            type="primary"
+            htmlType="submit"
+            block
+            loading={isLoading}
           >
             {isLoading ? 'Resetting...' : 'Reset Password'}
           </Button>
+        </Form.Item>
+
+        <Form.Item style={{ marginBottom: 0 }}>
           <Button
-            fullWidth
-            variant="text"
+            type="link"
+            block
             onClick={() => navigate('/login')}
           >
             Back to Login
           </Button>
-        </Box>
-      </Box>
-    </Container>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
-
-export default ResetPassword;

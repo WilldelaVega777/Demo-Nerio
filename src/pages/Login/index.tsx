@@ -2,9 +2,10 @@
 // Imports Section
 //--------------------------------------------------------------------------------------
 import { FC, useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
 import './Login.css';
+import { Input, Button, Form, Typography, Alert, Card } from 'antd';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
@@ -24,6 +25,7 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { isAuthenticated, login } = useAuth();
+  const navigate = useNavigate();
 
   //--------------------------------------------------------------------------------------
   // Functions Section
@@ -63,39 +65,78 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
   }
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Login</h2>
-        {error && <div className="error-message">{error}</div>}
-        <div className="form-group">
-          <input
-            type="text"
+    <Card className="login-card" style={{ maxWidth: 400, margin: '40px auto', padding: '24px', background: '#1f1f1f' }}>
+      <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
+        Login
+      </Typography.Title>
+
+      {error && (
+        <Alert
+          message={error}
+          type="error"
+          showIcon
+          style={{ marginBottom: '24px' }}
+        />
+      )}
+
+      <Form
+        onFinish={handleSubmit}
+        layout="vertical"
+        requiredMark="optional"
+      >
+        <Form.Item
+          label="Email Address"
+          name="email"
+          rules={[{ required: true, message: 'Please input your email!' }]}
+        >
+          <Input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-            required
+            autoComplete="email"
           />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
+        </Form.Item>
+
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
+            autoComplete="current-password"
           />
-        </div>
-        <button type="submit">Login</button>
-        <div className="auth-links">
-          <Link to="/forgot-password">Forgot Password?</Link>
-          <Link to="/signup">Don't have an account? Sign up</Link>
-        </div>
-      </form>
-    </div>
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+          >
+            Login
+          </Button>
+        </Form.Item>
+
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button
+            type="link"
+            block
+            onClick={() => navigate('/forgot-password')}
+          >
+            Forgot Password?
+          </Button>
+          <Button
+            type="link"
+            block
+            onClick={() => navigate('/signup')}
+          >
+            Don't have an account? Sign up
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 
-//--------------------------------------------------------------------------------------
-// Exports Section
-//--------------------------------------------------------------------------------------
 export default Login;

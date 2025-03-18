@@ -2,9 +2,9 @@
 // Imports Section
 //--------------------------------------------------------------------------------------
 import { FC, useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
-import '../Login/Login.css';
+import { Form, Input, Button, Typography, Alert, Card } from 'antd';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
@@ -24,28 +24,40 @@ const Signup: FC<SignupProps> = ({ /* props */ }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, signup } = useAuth();
+  const navigate = useNavigate();
 
   //--------------------------------------------------------------------------------------
   // Functions Section
   //--------------------------------------------------------------------------------------
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    signup({
-      email: username,
-      password: password,
-      licenseKey: '' // Since we're not collecting licenseKey in this form
-    }).then(success => {
+    setError('');
+    setIsLoading(true);
+    
+    try {
+      if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+      }
+      
+      const success = await signup({
+        email: username,
+        password: password,
+        licenseKey: '' // Since we're not collecting licenseKey in this form
+      });
+      
       if (success) {
         setError('');
+        navigate('/');
       } else {
-        setError('Error creating account');
+        throw new Error('Error creating account');
       }
-    });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred during signup');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   //--------------------------------------------------------------------------------------
@@ -56,43 +68,84 @@ const Signup: FC<SignupProps> = ({ /* props */ }) => {
   }
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Sign Up</h2>
-        {error && <div className="error-message">{error}</div>}
-        <div className="form-group">
-          <input
-            type="text"
+    <Card style={{ maxWidth: 400, margin: '40px auto', padding: '24px' }}>
+      <Typography.Title level={2} style={{ textAlign: 'center', marginBottom: '24px' }}>
+        Sign Up
+      </Typography.Title>
+
+      {error && (
+        <Alert
+          message={error}
+          type="error"
+          showIcon
+          style={{ marginBottom: '24px' }}
+        />
+      )}
+
+      <Form
+        onFinish={handleSubmit}
+        layout="vertical"
+        requiredMark="optional"
+      >
+        <Form.Item
+          label="Email Address"
+          name="email"
+          rules={[{ required: true, message: 'Please input your email!' }]}
+        >
+          <Input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-            required
+            autoComplete="email"
+            style={{ backgroundColor: '#2a2a2a' }}
           />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
+        </Form.Item>
+
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
+            style={{ backgroundColor: '#2a2a2a' }}
           />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
+        </Form.Item>
+
+        <Form.Item
+          label="Confirm Password"
+          name="confirmPassword"
+          rules={[{ required: true, message: 'Please confirm your password!' }]}
+        >
+          <Input.Password
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm Password"
-            required
+            style={{ backgroundColor: '#2a2a2a' }}
           />
-        </div>
-        <button type="submit">Sign Up</button>
-        <div className="auth-links">
-          <Link to="/login">Already have an account? Sign in</Link>
-        </div>
-      </form>
-    </div>
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            loading={isLoading}
+          >
+            {isLoading ? 'Signing up...' : 'Sign Up'}
+          </Button>
+        </Form.Item>
+
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button
+            type="link"
+            block
+            onClick={() => navigate('/login')}
+          >
+            Already have an account? Sign in
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 

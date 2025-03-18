@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import ApplicationProvider from './providers/ApplicationProvider';
-import 'antd/dist/reset.css';
+// Ant Design v5 uses CSS-in-JS by default, no need to import CSS file
 import './index.css';
 
 //--------------------------------------------------------------------------------------
