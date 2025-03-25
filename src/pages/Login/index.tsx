@@ -4,6 +4,7 @@
 import { FC, useState } from 'react';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
+import { resendVerificationEmail } from '../../services/authService';
 import './Login.css';
 import { Input, Button, Form, Typography, Alert, Card } from 'antd';
 
@@ -24,6 +25,8 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
 
@@ -32,18 +35,31 @@ const Login: FC<LoginProps> = ({ /* props */ }) => {
   //--------------------------------------------------------------------------------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setUnverifiedEmail('');
+    setIsLoading(true);
+
     try {
       const success = await login(username, password);
       if (success) {
-        setError('');
+        navigate('/');
       } else {
-        setError('Invalid username or password');
+        setError('Invalid credentials');
       }
-    } catch (error) {
-      setError('An error occurred during login');
-      console.error('Login error:', error);
+    } catch (err) {
+      // Verificar si el error es debido a que el correo no está verificado
+      if (err instanceof Error && err.message === 'EMAIL_NOT_VERIFIED') {
+        // Redirigir a la página de verificación de correo
+        navigate('/email-verification', { state: { email: username } });
+        return;
+      } else {
+        setError('An error occurred during login');
+        console.error('Login error:', err);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }; // Added missing closing brace here
 
   //--------------------------------------------------------------------------------------
   // Variables Section

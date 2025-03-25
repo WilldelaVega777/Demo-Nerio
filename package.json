@@ -18,6 +18,8 @@
             "@tanstack/react-query": "^5.67.2",
             "@tanstack/react-query-devtools": "^5.67.2",
             "antd": "^5.24.3",
+            "axios": "^1.8.3",
+            "jwt-decode": "^4.0.0",
             "react": "^18.2.0",
             "react-dom": "^18.2.0",
             "react-router-dom": "^6.11.2",
@@ -25,6 +27,7 @@
             "zustand": "^4.3.8"
       },
       "devDependencies": {
+            "@testing-library/jest-dom": "^6.6.3",
             "@types/react": "^18.0.37",
             "@types/react-dom": "^18.0.11",
             "@vitejs/plugin-react": "^4.0.0",

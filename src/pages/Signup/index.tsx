@@ -31,8 +31,7 @@ const Signup: FC<SignupProps> = ({ /* props */ }) => {
   //--------------------------------------------------------------------------------------
   // Functions Section
   //--------------------------------------------------------------------------------------
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError('');
     setIsLoading(true);
     
@@ -49,7 +48,8 @@ const Signup: FC<SignupProps> = ({ /* props */ }) => {
       
       if (success) {
         setError('');
-        navigate('/');
+        // Redirigir a la página de verificación de correo electrónico
+        navigate('/email-verification', { state: { email: username } });
       } else {
         throw new Error('Error creating account');
       }

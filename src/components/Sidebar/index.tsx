@@ -6,17 +6,19 @@ import {
   MicrophoneIcon,
   ChatBubbleBottomCenterTextIcon,
   UserGroupIcon,
-  ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronLeftIcon,
   Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import './Sidebar.css';
 
 interface SidebarProps {
-  // Define props here (if any)
+  // Define props here
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-const Sidebar: FC<SidebarProps> = () => {
+const Sidebar: FC<SidebarProps> = ({ isCollapsed: propIsCollapsed, onToggleCollapse }) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(true);
 

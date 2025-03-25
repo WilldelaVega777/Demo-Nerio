@@ -2,14 +2,15 @@
 // Imports Section
 //--------------------------------------------------------------------------------------
 /// <reference types="vite/client" />
-import { createContext, useContext, useState, ReactNode, FC } from 'react';
-import axios from 'axios';
+import { createContext, useContext, useEffect, ReactNode, FC } from 'react';
+import { useAuthStore } from '../stores/authStore';
 
 //--------------------------------------------------------------------------------------
 // Props Interface Section
 //--------------------------------------------------------------------------------------
 interface AuthContextType {
   isAuthenticated: boolean;
+  user: { id: string; username: string } | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   signup: (data: { email: string; password: string; licenseKey: string }) => Promise<boolean>;
@@ -32,24 +33,40 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   //--------------------------------------------------------------------------------------
   // Hooks Section
   //--------------------------------------------------------------------------------------
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return !!localStorage.getItem('token');
-  });
+  const { isAuthenticated, user, setToken, logout: storeLogout, getToken } = useAuthStore();
 
   //--------------------------------------------------------------------------------------
   // Functions Section
   //--------------------------------------------------------------------------------------
   const login = async (username: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
-        email: username,
-        password,
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: username,
+          password,
+        }),
       });
 
-      if (response.data.access_token) {
-        localStorage.setItem('token', response.data.access_token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-        setIsAuthenticated(true);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        // Verificar si el error es debido a que el correo no está verificado
+        if (response.status === 403 && data.needsVerification) {
+          const error = new Error('EMAIL_NOT_VERIFIED');
+          // Añadir el email como propiedad al error para poder redirigir al usuario
+          // a la página de verificación de correo
+          (error as any).email = username;
+          throw error;
+        }
+        throw new Error(data.message || 'Login failed');
+      }
+
+      if (data.access_token) {
+        setToken(data.access_token);
         return true;
       }
       return false;
@@ -61,12 +78,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const signup = async (data: { email: string; password: string; licenseKey: string }) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/signup`, data);
-      
-      if (response.data.access_token) {
-        localStorage.setItem('token', response.data.access_token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-        setIsAuthenticated(true);
+      const response = await fetch(`${API_URL}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Signup failed');
+      }
+
+      const responseData = await response.json();
+      if (responseData.access_token) {
+        setToken(responseData.access_token);
         return true;
       }
       return false;
@@ -77,15 +103,19 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
+    storeLogout();
   };
+
+  // Verificar token al montar el componente
+  useEffect(() => {
+    getToken();
+  }, []);
 
   //--------------------------------------------------------------------------------------
   // JSX Section
   //--------------------------------------------------------------------------------------
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, signup }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

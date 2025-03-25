@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Typography, Alert, Card } from 'antd';
 import { useAuth } from '../../providers/AuthProvider';
 import { validateLicenseKey } from '../../services/licenseService';
+import { checkEmailExists } from '../../services/authService';
 import axios from 'axios';
 
 interface SignupFormData {
@@ -39,6 +40,18 @@ export const SignupPage: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      // Check if email already exists
+      const emailExists = await checkEmailExists(formData.email);
+      if (emailExists) {
+        throw new Error('This email is already registered');
+      }
+
       // Validate passwords match
       if (formData.password !== formData.confirmPassword) {
         throw new Error('Passwords do not match');
@@ -58,8 +71,8 @@ export const SignupPage: React.FC = () => {
       });
 
       if (success) {
-        // Redirect to dashboard on success
-        navigate('/dashboard');
+        // Redirect to email verification page on success
+        navigate('/email-verification', { state: { email: formData.email } });
       } else {
         throw new Error('Failed to create account');
       }
@@ -97,7 +110,10 @@ export const SignupPage: React.FC = () => {
         <Form.Item
           label="Email Address"
           name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'Please enter a valid email address!' }
+          ]}
         >
           <Input
             name="email"
